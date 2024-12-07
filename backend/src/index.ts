@@ -5,6 +5,8 @@ declare global{
         }
     }
 }
+import dotenv from 'dotenv'
+dotenv.config({path:"config.env"})
 import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
@@ -17,10 +19,21 @@ import { userMiddleware } from "./middleware";
 import { nanoid } from "nanoid";
 import cors from "cors"
 const app = express();
-
 app.use(express.json())
 app.use(cors())
-mongoose.connect("mongodb+srv://akashnegi9690:akashnegi9690@cluster0.a1dkp.mongodb.net/Brainly")
+
+if(!process.env.db_url){
+    throw new Error("url does not exists ");
+}
+const db_url:string=process.env.db_url;
+async function connect() {
+    try{
+       await mongoose.connect(db_url);
+        console.log("connection successful")
+    }catch(e){
+        console.error("connection failed")
+    }
+}
 
 app.post("/api/v1/signup", async (req, res) => {
     const username = req.body.username
