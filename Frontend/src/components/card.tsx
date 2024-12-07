@@ -5,7 +5,10 @@ interface CardProps {
     url:string
 }
 export function Card({ title, type,url }: CardProps) {
-  
+    function extractYouTubeID(url: string): string {
+        const match = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+        return match ? match[1] : "";
+    }
 
     return (
         <div className=" w-80 border-2 border-gray-200 min-h-96 rounded-2xl p-5 flex flex-col gap-4 justify-start">
@@ -19,13 +22,13 @@ export function Card({ title, type,url }: CardProps) {
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" /></svg>
             </div>
             <div>
-                {type === "youtube" && <iframe className="w-full" src={url.replace("watch","embed").replace("?v=","/")}
+                {type === "youtube" && <iframe className="w-full" src={`https://www.youtube.com/embed/${extractYouTubeID(url)}`}
                     title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;
                      picture-in-picture;
                      web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
                 }
 
-                {type === "twitter" && <blockquote className="twitter-tweet">
+                {type === "twitter" && <blockquote className="twitter-tweet w-full">
                     <a href={url.replace("x.com","twitter.com")}></a>
                 </blockquote>}
             </div>

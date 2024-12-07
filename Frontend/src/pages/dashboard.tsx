@@ -6,6 +6,7 @@ import { ShareIcon } from '../icons/shareicon'
 import { Card } from '../components/card'
 import { Modal } from '../components/CreateModal'
 import axios from 'axios'
+import { nanoid } from 'nanoid'
 enum ContentType {
   Youtube = "youtube",
   Twitter = "twitter"
@@ -47,21 +48,30 @@ function Dashboard() {
   }
   function UseContent() {
     const [contents, setContents] = useState([])
-    useEffect(() => {
-      const fetchData = async () => {
-        const response = await axios.get("http://localhost:3000/api/v1/content", {
-          headers: {
-            "Authorization": localStorage.getItem("token")
-          }
-        })
-        setContents(response.data.content)
+    const fetchData = async () => {
+      const response = await axios.get("http://localhost:3000/api/v1/content", {
+        headers: {
+          "Authorization": localStorage.getItem("token")
+        }
+      })
+      if (JSON.stringify(response.data.content) !== JSON.stringify(contents)) {
+        setContents(response.data.content);
       }
+      
+    }
+    useEffect(() => {
       fetchData();
-
+     let fetchInterval=setInterval(()=>{fetchData()},10000)
+      
+      return ()=>{clearInterval(fetchInterval);}
     }, [])
     return contents
   }
   const contents = UseContent()
+  useEffect(() => {
+    (window as any).twttr?.widgets.load();
+  }, [contents]);
+  
   return (
 
     <div className='flex  dark:bg-black dark:text-white min-h-screen transition-all duration-1000 dark:selection:bg-white dark:selection:text-black '>
@@ -80,8 +90,8 @@ function Dashboard() {
           </div>
         </div>
         <div className='mt-14 flex justify-center  gap-5 flex-wrap'>
-          {contents.map(({ type, link, title }) =>
-            <Card key={link} title={title}
+          {contents.map(({ type, link, title}) =>
+            <Card key={nanoid(5)} title={title}
               type={type}
               url={link} />
           )}
