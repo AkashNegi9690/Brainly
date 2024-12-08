@@ -51,6 +51,11 @@ app.post("/api/v1/signup", async (req, res) => {
     })
     const parsedSuccessfully = requiredBody.safeParse(req.body)
     if (parsedSuccessfully.success) {
+        const user= await userModel.findOne({username})
+        if(user){
+          res.status(409).json({message:"user or email already exists"})
+        return;
+        }
         const hashedPassword = await bcrypt.hash(password, 5)
         try {
             await userModel.create({
@@ -70,8 +75,9 @@ app.post("/api/v1/signup", async (req, res) => {
         }
     }
     else {
+        const errors = parsedSuccessfully.error.issues.map((issue)=>issue.message);
         res.status(411).json({
-            message: parsedSuccessfully.error
+            message: errors
         })
     }
 })
@@ -86,19 +92,19 @@ app.post("/api/v1/signin", async (req, res) => {
             const token = jwt.sign({
                 id:user._id
             },userSecret)
-            res.json({
-                token
+            res.status(200).json({
+                token,message:"Sign-in successful"
             })
         }
         else{
-            res.json({
+            res.status(401).json({
                 message:"wrong password"
             })
         }
 
     }
     else{
-        res.json({
+        res.status(404).json({
             message:"wrong email"
         })
     }
@@ -131,12 +137,12 @@ app.get("/api/v1/content",userMiddleware,async (req, res) => {
 })
 
 app.delete("/api/v1/content",userMiddleware, async (req, res) => {
-//@ts-ignore
-    const userId=req.userId
+
+    
     const contentId=req.body.contentId;
-    await contentModel.deleteMany({
-        contentId,
-        userId
+    console.log(contentId);
+    await contentModel.deleteOne({
+       _id: contentId
     })
     res.json({
         message:"deleted"
