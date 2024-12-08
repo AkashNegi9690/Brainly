@@ -16,6 +16,7 @@ function Dashboard() {
   const [issideBarOpen, setIsSideBarOpen] = useState(true)
   const [ismodalOpen, setIsModalOpen] = useState(false)
   const [type, setType] = useState<ContentType>(ContentType.Youtube)
+  const [contents, setContents] = useState([]); 
   function changeMode() {
     const htmlElement = document.querySelector("html")
     if (htmlElement) {
@@ -46,28 +47,33 @@ function Dashboard() {
   function createContent() {
     setIsModalOpen(!ismodalOpen)
   }
-  function UseContent() {
-    const [contents, setContents] = useState([])
+  
     const fetchData = async () => {
-      const response = await axios.get("http://localhost:3000/api/v1/content", {
-        headers: {
-          "Authorization": localStorage.getItem("token")
+      try{
+        const response = await axios.get("http://localhost:3000/api/v1/content", {
+          headers: {
+            "Authorization": localStorage.getItem("token")
+          }
+        })
+        if (response.data.content.length !== contents.length) {
+          console.log(response.data.content);
+          setContents(response.data.content);
         }
-      })
-      if (JSON.stringify(response.data.content) !== JSON.stringify(contents)) {
-        setContents(response.data.content);
+      }catch(e){
+        console.log("error fetching data");
       }
       
-    }
-    useEffect(() => {
-      fetchData();
-     let fetchInterval=setInterval(()=>{fetchData()},10000)
-      
-      return ()=>{clearInterval(fetchInterval);}
-    }, [])
-    return contents
-  }
-  const contents = UseContent()
+  };
+
+  useEffect(() => {
+    fetchData();
+   const fetchInterval=setInterval(()=>{
+    fetchData()
+  },10000);
+    
+    return ()=>{clearInterval(fetchInterval);}
+  }, [contents])
+  
   useEffect(() => {
     (window as any).twttr?.widgets.load();
   }, [contents]);

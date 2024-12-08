@@ -25,9 +25,6 @@ export function Modal(props:Modalprops){
             }
         })
         props.onclick();
-        setTimeout(() => {
-            
-        }, 3000);
     }
     return <div className="fixed top-0 left-0 flex justify-center items-center bg-white/20 backdrop-blur-sm w-full h-screen z-50    ">
         <div className="flex flex-col justify-center items-center gap-5 bg-white h-96 min-w-72 rounded-lg border-2 border-gray-300 shadow-md">

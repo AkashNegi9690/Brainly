@@ -1,3 +1,5 @@
+import dotenv from 'dotenv'
+dotenv.config({ path: 'config.env' });
 declare global{
     namespace Express {
         export interface Request {
@@ -5,8 +7,7 @@ declare global{
         }
     }
 }
-import dotenv from 'dotenv'
-dotenv.config({path:"config.env"})
+
 import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
@@ -34,7 +35,7 @@ async function connect() {
         console.error("connection failed")
     }
 }
-
+connect();
 app.post("/api/v1/signup", async (req, res) => {
     const username = req.body.username
     const password = req.body.password
