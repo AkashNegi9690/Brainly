@@ -24,9 +24,9 @@ export function Card({ title, type, url,contentId,fetchData }: CardProps) {
             })
             fetchData();
     }
-    console.log(contentId)
+   
     return (
-        <div className=" w-80 border-2 bg-white dark:bg-black border-gray-300 shadow-md min-h-96 rounded-2xl p-5 flex flex-col gap-4 justify-start hover:cursor-pointer hover:translate-x-1 hover:-translate-y-1 transition-all duration-500">
+        <div className=" w-80 border-2 bg-white dark:bg-black border-gray-300 shadow-md min-h-96 rounded-2xl p-5 flex flex-col gap-4 justify-start hover:cursor-pointer hover:translate-x-1 hover:-translate-y-1 transition-all duration-500 hover:z-0">
             <div>Created on </div>
             <div className="flex items-center justify-between ">
                 <div className="flex items-center justify-center gap-2">

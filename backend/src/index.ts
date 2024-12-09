@@ -128,12 +128,24 @@ res.json({
 app.get("/api/v1/content",userMiddleware,async (req, res) => {
    
     const userId=req.userId
+    const dashboardContentType=req.query.dashboardContentType
+    if(!dashboardContentType){
+        const content=await contentModel.find({
+            userId
+        }).populate("userId","username")
+        res.json({
+            content
+        })
+        return;
+    }
     const content=await contentModel.find({
-        userId
+        userId,type:dashboardContentType
     }).populate("userId","username")
     res.json({
         content
     })
+    
+   
 })
 
 app.delete("/api/v1/content",userMiddleware, async (req, res) => {
