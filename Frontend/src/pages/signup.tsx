@@ -30,7 +30,8 @@ export function Signup(){
     function handleOlduser(){
         navigate("/signin")
     }
-    return (
+    return (<> <h1>username:akash12@gmail.com</h1><br />
+    <h1>password:Akash@123</h1>
         <div className="flex justify-center items-center w-full h-screen bg-gray-200">
             <div className="bg-white rounded-xl h-64 min-w-72 sm:min-w-96 flex flex-col gap-4 px-2 py-4 justify-center border-2 border-gray-300 shadow-md">
                 <input className="border-2 border-gray-200 p-2" type="text" placeholder="email..." ref={emailRef}/>
@@ -39,5 +40,6 @@ export function Signup(){
                 <p onClick={handleOlduser} className="text-center hover:text-purple-600">already a user?</p>
             </div>
         </div>
+        </>
     )
 }
